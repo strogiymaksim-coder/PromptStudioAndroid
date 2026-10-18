@@ -20,7 +20,19 @@ class MainActivity : ComponentActivity() {
                             onStartClick = { currentScreen = "home" }
                         )
                         "home" -> HomeScreen(
-                            onCreatePromptClick = { currentScreen = "task" }
+                            onCreatePromptClick = { currentScreen = "task" },
+                            onProjectsClick = { currentScreen = "projects" },
+                            onLibrariesClick = { currentScreen = "libraries" },
+                            onSettingsClick = { currentScreen = "settings" }
+                        )
+                        "projects" -> ProjectsScreen(
+                            onBackClick = { currentScreen = "home" }
+                        )
+                        "libraries" -> LibrariesScreen(
+                            onBackClick = { currentScreen = "home" }
+                        )
+                        "settings" -> SettingsScreen(
+                            onBackClick = { currentScreen = "home" }
                         )
                         "task" -> TaskScreen(
                             onBackClick = { currentScreen = "home" },
