@@ -6,11 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,12 +31,21 @@ data class ColorPalette(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaletteScreen(
+    customPalettes: List<ColorPalette>,
+    onAddCustomPalette: (ColorPalette) -> Unit,
     onBackClick: () -> Unit = {},
     onNextClick: () -> Unit = {}
 ) {
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by remember { mutableStateOf(0) } // 0: Готовые, 1: Мои
+    var showAddDialog by remember { mutableStateOf(false) }
 
-    val palettes = listOf(
+    // Поля для создания своей палитры
+    var newPaletteName by remember { mutableStateOf("") }
+    var newHex1 by remember { mutableStateOf("#2563EB") }
+    var newHex2 by remember { mutableStateOf("#1E293B") }
+    var newHex3 by remember { mutableStateOf("#F8FAFC") }
+
+    val defaultPalettes = listOf(
         ColorPalette(
             "Тёплая светлая",
             listOf(Color(0xFFE6C79C), Color(0xFFF5E6D3), Color(0xFFD49B6A)),
@@ -46,9 +57,9 @@ fun PaletteScreen(
             listOf("#1E3A8A", "#D97706", "#0F172A")
         ),
         ColorPalette(
-            "Нейтральная",
-            listOf(Color(0xFF94A3B8), Color(0xFFE2E8F0), Color(0xFF475569)),
-            listOf("#94A3B8", "#E2E8F0", "#475569")
+            "Киберпанк / Неон",
+            listOf(Color(0xFF7C3AED), Color(0xFFEC4899), Color(0xFF06B6D4)),
+            listOf("#7C3AED", "#EC4899", "#06B6D4")
         ),
         ColorPalette(
             "Природная зелёная",
@@ -56,18 +67,29 @@ fun PaletteScreen(
             listOf("#15803D", "#86EFAC", "#14532D")
         ),
         ColorPalette(
-            "Фиолетовая",
-            listOf(Color(0xFF7C3AED), Color(0xFFDDD6FE), Color(0xFF4C1D95)),
-            listOf("#7C3AED", "#DDD6FE", "#4C1D95")
+            "Монохромный нуар",
+            listOf(Color(0xFF111827), Color(0xFF4B5563), Color(0xFFE5E7EB)),
+            listOf("#111827", "#4B5563", "#E5E7EB")
         ),
         ColorPalette(
             "Корпоративная",
             listOf(Color(0xFF0284C7), Color(0xFFBAE6FD), Color(0xFF0369A1)),
             listOf("#0284C7", "#BAE6FD", "#0369A1")
+        ),
+        ColorPalette(
+            "Винтаж / Ретро",
+            listOf(Color(0xFF9A3412), Color(0xFFD97706), Color(0xFFFEF3C7)),
+            listOf("#9A3412", "#D97706", "#FEF3C7")
+        ),
+        ColorPalette(
+            "Пастельная мягкая",
+            listOf(Color(0xFFFBCFE8), Color(0xFFBAE6FD), Color(0xFFFED7AA)),
+            listOf("#FBCFE8", "#BAE6FD", "#FED7AA")
         )
     )
 
-    var selectedPalette by remember { mutableStateOf(palettes[0]) }
+    val displayedPalettes = if (selectedTab == 0) defaultPalettes else (defaultPalettes.take(0) + customPalettes)
+    var selectedPalette by remember { mutableStateOf(defaultPalettes[0]) }
 
     val darkBackground = Color(0xFF0F172A)
     val cardBackground = Color(0xFF1E293B)
@@ -76,22 +98,17 @@ fun PaletteScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "5. Цветовая палитра",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
+                title = { Text("6. Цветовая палитра", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Назад", tint = Color.White)
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Меню", tint = Color.White)
+                    if (selectedTab == 1) {
+                        IconButton(onClick = { showAddDialog = true }) {
+                            Icon(Icons.Default.Add, contentDescription = "Создать палитру", tint = Color.White)
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = darkBackground)
@@ -121,54 +138,81 @@ fun PaletteScreen(
                     Tab(
                         selected = selectedTab == 1,
                         onClick = { selectedTab = 1 },
-                        text = { Text("Мои", fontSize = 13.sp) }
+                        text = { Text("Мои (${customPalettes.size})", fontSize = 13.sp) }
                     )
                 }
 
-                // Сетка готовых палитр
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.height(260.dp)
-                ) {
-                    items(palettes.size) { index ->
-                        val item = palettes[index]
-                        val isSelected = selectedPalette.name == item.name
+                if (selectedTab == 1 && customPalettes.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(Icons.Default.Palette, contentDescription = null, tint = accentBlue, modifier = Modifier.size(48.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text("У вас пока нет своих палитр", color = Color.Gray, fontSize = 13.sp)
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(
+                                onClick = { showAddDialog = true },
+                                colors = ButtonDefaults.buttonColors(containerColor = accentBlue)
+                            ) {
+                                Text("Создать палитру")
+                            }
+                        }
+                    }
+                } else {
+                    // Сетка палитр
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.height(240.dp)
+                    ) {
+                        items(displayedPalettes.size) { index ->
+                            val item = displayedPalettes[index]
+                            val isSelected = selectedPalette.name == item.name
 
-                        Card(
-                            shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(containerColor = cardBackground),
-                            modifier = Modifier
-                                .border(
-                                    width = if (isSelected) 2.dp else 0.dp,
-                                    color = if (isSelected) accentBlue else Color.Transparent,
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                                .clickable { selectedPalette = item }
-                        ) {
-                            Column(modifier = Modifier.padding(10.dp)) {
-                                Text(
-                                    text = item.name,
-                                    color = Color.White,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    maxLines = 1
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Row(
+                            Card(
+                                shape = RoundedCornerShape(12.dp),
+                                colors = CardDefaults.cardColors(containerColor = cardBackground),
+                                modifier = Modifier
+                                    .height(85.dp)
+                                    .border(
+                                        width = if (isSelected) 2.dp else 0.dp,
+                                        color = if (isSelected) accentBlue else Color.Transparent,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .clickable { selectedPalette = item }
+                            ) {
+                                Column(
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(28.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                        .padding(10.dp)
+                                        .fillMaxSize(),
+                                    verticalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    item.colors.forEach { color ->
-                                        Box(
-                                            modifier = Modifier
-                                                .weight(1f)
-                                                .fillMaxHeight()
-                                                .background(color, RoundedCornerShape(4.dp))
-                                        )
+                                    Text(
+                                        text = item.name,
+                                        color = Color.White,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        maxLines = 1
+                                    )
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(24.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        item.colors.forEach { color ->
+                                            Box(
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                                    .fillMaxHeight()
+                                                    .background(color, RoundedCornerShape(4.dp))
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -178,7 +222,7 @@ fun PaletteScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Полностью восстановленная информационная карточка
+                // Карточка информации о выбранной палитре
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = cardBackground),
@@ -186,51 +230,140 @@ fun PaletteScreen(
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
                         Text(
-                            text = "Выбранные HEX-коды:",
-                            color = Color.White.copy(alpha = 0.6f),
-                            fontSize = 12.sp
+                            text = "Выбрано: ${selectedPalette.name}",
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            selectedPalette.hexCodes.forEachIndexed { i, hex ->
-                                Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier.height(28.dp),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                selectedPalette.colors.forEach { color ->
                                     Box(
                                         modifier = Modifier
-                                            .size(12.dp)
-                                            .background(selectedPalette.colors[i], RoundedCornerShape(3.dp))
+                                            .size(28.dp)
+                                            .background(color, RoundedCornerShape(6.dp))
                                     )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text(text = hex, color = Color.White, fontSize = 12.sp)
                                 }
                             }
+                            Text(
+                                text = selectedPalette.hexCodes.joinToString("  "),
+                                color = Color.Gray,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Кнопка перехода на следующий экран
             Button(
                 onClick = onNextClick,
-                colors = ButtonDefaults.buttonColors(containerColor = accentBlue),
-                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .height(48.dp),
+                shape = RoundedCornerShape(24.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = accentBlue)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(text = "Далее", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null, tint = Color.White)
-                }
+                Text("Далее: Формат", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(Icons.Default.ArrowForward, contentDescription = null, tint = Color.White)
             }
+        }
+
+        // Диалог создания своей палитры
+        if (showAddDialog) {
+            AlertDialog(
+                onDismissRequest = { showAddDialog = false },
+                containerColor = cardBackground,
+                title = { Text("Новая цветовая палитра", color = Color.White, fontSize = 16.sp) },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        OutlinedTextField(
+                            value = newPaletteName,
+                            onValueChange = { newPaletteName = it },
+                            placeholder = { Text("Название палитры", color = Color.Gray) },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = Color.White,
+                                unfocusedTextColor = Color.White,
+                                focusedBorderColor = accentBlue,
+                                unfocusedBorderColor = Color.Gray
+                            )
+                        )
+                        OutlinedTextField(
+                            value = newHex1,
+                            onValueChange = { newHex1 = it },
+                            placeholder = { Text("Цвет 1 (HEX, например #FF5733)", color = Color.Gray) },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = Color.White,
+                                unfocusedTextColor = Color.White,
+                                focusedBorderColor = accentBlue,
+                                unfocusedBorderColor = Color.Gray
+                            )
+                        )
+                        OutlinedTextField(
+                            value = newHex2,
+                            onValueChange = { newHex2 = it },
+                            placeholder = { Text("Цвет 2 (HEX)", color = Color.Gray) },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = Color.White,
+                                unfocusedTextColor = Color.White,
+                                focusedBorderColor = accentBlue,
+                                unfocusedBorderColor = Color.Gray
+                            )
+                        )
+                        OutlinedTextField(
+                            value = newHex3,
+                            onValueChange = { newHex3 = it },
+                            placeholder = { Text("Цвет 3 (HEX)", color = Color.Gray) },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = Color.White,
+                                unfocusedTextColor = Color.White,
+                                focusedBorderColor = accentBlue,
+                                unfocusedBorderColor = Color.Gray
+                            )
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            if (newPaletteName.isNotBlank()) {
+                                try {
+                                    val c1 = Color(android.graphics.Color.parseColor(newHex1))
+                                    val c2 = Color(android.graphics.Color.parseColor(newHex2))
+                                    val c3 = Color(android.graphics.Color.parseColor(newHex3))
+
+                                    val custom = ColorPalette(
+                                        name = newPaletteName,
+                                        colors = listOf(c1, c2, c3),
+                                        hexCodes = listOf(newHex1, newHex2, newHex3)
+                                    )
+                                    onAddCustomPalette(custom)
+                                    showAddDialog = false
+                                    selectedTab = 1
+                                } catch (e: Exception) {
+                                    // Ошибка парсинга HEX кодов, можно проигнорировать или оставить дефолт
+                                }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = accentBlue)
+                    ) {
+                        Text("Сохранить")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showAddDialog = false }) {
+                        Text("Отмена", color = Color.Gray)
+                    }
+                }
+            )
         }
     }
 }
