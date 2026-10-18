@@ -24,8 +24,12 @@ class MainActivity : ComponentActivity() {
                         )
                         "task" -> TaskScreen(
                             onBackClick = { currentScreen = "home" },
+                            onNextClick = { currentScreen = "style" }
+                        )
+                        "style" -> StyleScreen(
+                            onBackClick = { currentScreen = "task" },
                             onNextClick = {
-                                // Здесь в следующих шагах добавим переход к блоку "Стиль и художники"
+                                // Здесь в следующих шагах подключим остальные блоки конструктора
                             }
                         )
                     }
