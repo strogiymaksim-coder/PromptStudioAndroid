@@ -102,6 +102,7 @@ fun HomeScreen(
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
+            // Сетка нейросетей (ChatGPT, Midjourney, Nano Banana, Flux)
             val aiList = listOf("ChatGPT Images", "Midjourney", "Nano Banana", "Flux")
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -147,6 +148,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            // Карточка "Универсальный"
             Card(
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
@@ -171,6 +173,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Меню быстрой навигации к конструктору
             DashboardMenuItem(
                 title = "Создать новый промпт",
                 subtitle = "7 блоков • визуальные библиотеки",
@@ -200,6 +203,7 @@ fun HomeScreen(
     }
 }
 
+// ВАЖНО: Добавлена пропущенная функция для отображения плашек меню
 @Composable
 fun DashboardMenuItem(
     title: String,
@@ -235,10 +239,24 @@ fun DashboardMenuItem(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                Text(text = subtitle, color = Color.Gray, fontSize = 12.sp)
+                Text(
+                    text = title,
+                    color = Color.White,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = subtitle,
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
             }
-            Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(20.dp))
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = Color.Gray,
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }
