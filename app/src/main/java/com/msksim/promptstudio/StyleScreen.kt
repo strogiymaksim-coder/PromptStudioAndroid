@@ -129,17 +129,25 @@ fun StyleScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Полноразмерная удобная кнопка "Далее" в едином стиле приложения
             Button(
                 onClick = onNextClick,
+                colors = ButtonDefaults.buttonColors(containerColor = accentBlue),
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .align(Alignment.End)
-                    .height(48.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = accentBlue)
+                    .fillMaxWidth()
+                    .height(56.dp)
             ) {
-                Text("Далее", color = Color.White, fontSize = 15.sp)
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Default.ArrowForward, contentDescription = null, tint = Color.White)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(text = "Далее", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null, tint = Color.White)
+                }
             }
         }
     }
