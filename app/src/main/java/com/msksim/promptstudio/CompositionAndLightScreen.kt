@@ -52,7 +52,7 @@ fun CompositionAndLightScreen(
         OptionItem("Неоновый / Киберпанк", "Яркие контрастные цветные подсветки", Icons.Default.FlashOn),
         OptionItem("Мрачный нуар (Chiaroscuro)", "Глубокие тени, драматичный контраст", Icons.Default.Brightness2),
         OptionItem("Лунный свет / Ночной", "Холодные синие оттенки, таинственность", Icons.Default.NightsStay),
-        OptionItem("Кольцевой свет (Ring light)", "Равномерная подсветка без жестких теней", Icons.Default.RadiobuttonUnchecked)
+        OptionItem("Кольцевой свет (Ring light)", "Равномерная подсветка без жестких теней", Icons.Default.RadioButtonUnchecked)
     )
 
     var selectedComposition by remember { mutableStateOf(compositions[0].name) }
