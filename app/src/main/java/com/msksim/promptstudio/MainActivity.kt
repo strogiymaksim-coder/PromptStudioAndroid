@@ -40,10 +40,7 @@ class MainActivity : ComponentActivity() {
                         )
                         "final_prompt" -> FinalPromptScreen(
                             onBackClick = { currentScreen = "composition_light" },
-                            onSaveClick = {
-                                // Возврат на главный экран после сохранения
-                                currentScreen = "home"
-                            }
+                            onSaveClick = { currentScreen = "home" }
                         )
                     }
                 }
