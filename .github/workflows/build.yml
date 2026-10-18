@@ -20,15 +20,16 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # Устанавливаем глобальный Gradle версии 8.5 в саму систему Ubuntu
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
-        gradle-version: '8.5'
+        generate-job-summary: true
 
-    # ВАЖНО: Используем глобальную системную команду gradle вместо ./gradlew
     - name: Build with Gradle
-      run: gradle assembleDebug
+      run: |
+        gradle wrapper --gradle-version 8.2
+        chmod +x gradlew
+        ./gradlew assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
