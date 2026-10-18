@@ -102,7 +102,6 @@ fun HomeScreen(
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            // Сетка нейросетей (ChatGPT, Midjourney, Nano Banana, Flux)
             val aiList = listOf("ChatGPT Images", "Midjourney", "Nano Banana", "Flux")
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -148,7 +147,6 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Карточка "Универсальный"
             Card(
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
@@ -173,7 +171,6 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Меню быстрой навигации к конструктору
             DashboardMenuItem(
                 title = "Создать новый промпт",
                 subtitle = "7 блоков • визуальные библиотеки",
@@ -199,15 +196,6 @@ fun HomeScreen(
                 icon = Icons.Default.MenuBook,
                 onClick = {}
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            DashboardMenuItem(
-                title = "Настройки",
-                subtitle = "Язык, перевод, экспорт",
-                icon = Icons.Default.Settings,
-                onClick = {}
-            )
         }
     }
 }
@@ -220,46 +208,37 @@ fun DashboardMenuItem(
     isPrimary: Boolean = false,
     onClick: () -> Unit
 ) {
+    val cardBackground = Color(0xFF1E293B)
+    val accentBlue = Color(0xFF2563EB)
+
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isPrimary) Color(0xFF2563EB) else Color(0xFF1E293B)
+            containerColor = if (isPrimary) accentBlue.copy(alpha = 0.15f) else cardBackground
         ),
         modifier = Modifier
             .fillMaxWidth()
+            .height(72.dp)
             .clickable { onClick() }
     ) {
         Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color.White,
+                tint = if (isPrimary) accentBlue else Color.White,
                 modifier = Modifier.size(28.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = subtitle,
-                    color = Color.White.copy(alpha = 0.7f),
-                    fontSize = 12.sp
-                )
+                Text(text = title, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                Text(text = subtitle, color = Color.Gray, fontSize = 12.sp)
             }
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = null,
-                tint = Color.White.copy(alpha = 0.5f)
-            )
+            Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(20.dp))
         }
     }
 }
