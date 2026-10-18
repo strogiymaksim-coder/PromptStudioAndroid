@@ -4,14 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,9 +23,9 @@ fun WelcomeScreen(
 ) {
     val backgroundBrush = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF1E3A8A), // Темно-синий
-            Color(0xFF3B82F6), // Яркий синий
-            Color(0xFF1E1B4B)  // Темно-фиолетовый
+            Color(0xFF1E3A8A),
+            Color(0xFF3B82F6),
+            Color(0xFF1E1B4B)
         )
     )
 
