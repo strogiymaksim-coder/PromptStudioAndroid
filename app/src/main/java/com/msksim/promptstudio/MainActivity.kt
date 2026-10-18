@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,11 +13,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    WelcomeScreen(
-                        onStartClick = {
-                            // Здесь позже подключим Главный экран (Dashboard)
-                        }
-                    )
+                    // Состояние для переключения между экранами
+                    var currentScreen by remember { mutableStateOf("welcome") }
+
+                    when (currentScreen) {
+                        "welcome" -> WelcomeScreen(
+                            onStartClick = {
+                                // Переходим на главный экран при нажатии «Начать»
+                                currentScreen = "home"
+                            }
+                        )
+                        "home" -> HomeScreen(
+                            onCreatePromptClick = {
+                                // Здесь в будущем сделаем переход на экран конструктора промптов
+                            }
+                        )
+                    }
                 }
             }
         }
