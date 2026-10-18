@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -48,8 +50,9 @@ fun WelcomeScreen(
                 color = Color.White.copy(alpha = 0.15f)
             ) {
                 Box(contentAlignment = Alignment.Center) {
+                    // Используем стандартную Edit, которая гарантированно есть в базовом наборе
                     Icon(
-                        imageVector = Icons.Default.Create,
+                        imageVector = Icons.Default.Edit,
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier.size(40.dp)
@@ -73,6 +76,25 @@ fun WelcomeScreen(
                 color = Color.White.copy(alpha = 0.6f),
                 fontSize = 12.sp
             )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Добавляем красивую белую кнопку для перехода на следующий экран
+            Button(
+                onClick = onStartClick,
+                colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+            ) {
+                Text(
+                    text = "Начать работу",
+                    color = Color(0xFF1E3A8A),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
