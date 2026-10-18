@@ -32,8 +32,17 @@ class MainActivity : ComponentActivity() {
                         )
                         "palette" -> PaletteScreen(
                             onBackClick = { currentScreen = "style" },
-                            onNextClick = {
-                                // Здесь в следующих шагах подключим остальные блоки
+                            onNextClick = { currentScreen = "composition_light" }
+                        )
+                        "composition_light" -> CompositionAndLightScreen(
+                            onBackClick = { currentScreen = "palette" },
+                            onNextClick = { currentScreen = "final_prompt" }
+                        )
+                        "final_prompt" -> FinalPromptScreen(
+                            onBackClick = { currentScreen = "composition_light" },
+                            onSaveClick = {
+                                // Возврат на главный экран после сохранения
+                                currentScreen = "home"
                             }
                         )
                     }
