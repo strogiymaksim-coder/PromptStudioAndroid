@@ -28,8 +28,12 @@ class MainActivity : ComponentActivity() {
                         )
                         "style" -> StyleScreen(
                             onBackClick = { currentScreen = "task" },
+                            onNextClick = { currentScreen = "palette" }
+                        )
+                        "palette" -> PaletteScreen(
+                            onBackClick = { currentScreen = "style" },
                             onNextClick = {
-                                // Здесь в следующих шагах подключим остальные блоки конструктора
+                                // Здесь в следующих шагах подключим остальные блоки
                             }
                         )
                     }
