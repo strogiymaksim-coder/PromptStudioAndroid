@@ -145,7 +145,7 @@ fun TaskScreen(
                         onValueChange = { customText = it },
                         placeholder = {
                             Text(
-                                "Например: обложка корпоративного журнала для энергетической компании...",
+                                "Например: обложка корпоративного журнала...",
                                 color = Color.Gray,
                                 fontSize = 12.sp
                             )
@@ -191,18 +191,25 @@ fun TaskScreen(
                 }
             }
 
-            // Кнопка "Далее"
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Восстановленная кнопка "Далее" для перехода на следующий экран
             Button(
                 onClick = onNextClick,
+                colors = ButtonDefaults.buttonColors(containerColor = accentBlue),
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .align(Alignment.End)
-                    .height(48.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = accentBlue)
+                    .fillMaxWidth()
+                    .height(56.dp)
             ) {
-                Text("Далее", color = Color.White, fontSize = 15.sp)
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Default.ArrowForward, contentDescription = null, tint = Color.White)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(text = "Далее", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null, tint = Color.White)
+                }
             }
         }
     }
