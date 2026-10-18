@@ -13,19 +13,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    // Состояние для переключения между экранами
                     var currentScreen by remember { mutableStateOf("welcome") }
 
                     when (currentScreen) {
                         "welcome" -> WelcomeScreen(
-                            onStartClick = {
-                                // Переходим на главный экран при нажатии «Начать»
-                                currentScreen = "home"
-                            }
+                            onStartClick = { currentScreen = "home" }
                         )
                         "home" -> HomeScreen(
-                            onCreatePromptClick = {
-                                // Здесь в будущем сделаем переход на экран конструктора промптов
+                            onCreatePromptClick = { currentScreen = "task" }
+                        )
+                        "task" -> TaskScreen(
+                            onBackClick = { currentScreen = "home" },
+                            onNextClick = {
+                                // Здесь в следующих шагах добавим переход к блоку "Стиль и художники"
                             }
                         )
                     }
