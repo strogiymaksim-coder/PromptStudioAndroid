@@ -1,3 +1,4 @@
+import android.graphics.drawable.GradientDrawable
 package com.msksim.promptstudio;
 
 import android.app.*;
