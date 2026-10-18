@@ -102,7 +102,7 @@ fun HomeScreen(
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            // Сетка нейросетей (ChatGPT, Midjourney, Nano Banana, Flux)
+            // Сетка нейросетей
             val aiList = listOf("ChatGPT Images", "Midjourney", "Nano Banana", "Flux")
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -203,7 +203,7 @@ fun HomeScreen(
     }
 }
 
-// ВАЖНО: Добавлена пропущенная функция для отображения плашек меню
+// Эта функция обязательно должна быть внизу файла, чтобы кнопки отображались!
 @Composable
 fun DashboardMenuItem(
     title: String,
