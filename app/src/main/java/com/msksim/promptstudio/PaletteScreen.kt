@@ -78,7 +78,7 @@ fun PaletteScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "6. Цветовая палитра",
+                        text = "5. Цветовая палитра",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -178,7 +178,7 @@ fun PaletteScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Карточка информации о выбранной палитре (как снизу на макете)
+                // Полностью восстановленная информационная карточка
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = cardBackground),
@@ -186,49 +186,50 @@ fun PaletteScreen(
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
                         Text(
-                            text = selectedPalette.name,
-                            color = Color.White,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
+                            text = "Выбранные HEX-коды:",
+                            color = Color.White.copy(alpha = 0.6f),
+                            fontSize = 12.sp
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = Modifier.height(24.dp),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                selectedPalette.colors.forEach { color ->
+                            selectedPalette.hexCodes.forEachIndexed { i, hex ->
+                                Row(verticalAlignment = Alignment.CenterVertically) {
                                     Box(
                                         modifier = Modifier
-                                            .size(24.dp)
-                                            .background(color, RoundedCornerShape(4.dp))
+                                            .size(12.dp)
+                                            .background(selectedPalette.colors[i], RoundedCornerShape(3.dp))
                                     )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(text = hex, color = Color.White, fontSize = 12.sp)
                                 }
                             }
-                            Text(
-                                text = selectedPalette.hexCodes.joinToString("  "),
-                                color = Color.Gray,
-                                fontSize = 11.sp
-                            )
                         }
                     }
                 }
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Кнопка перехода на следующий экран
             Button(
                 onClick = onNextClick,
+                colors = ButtonDefaults.buttonColors(containerColor = accentBlue),
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .align(Alignment.End)
-                    .height(48.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = accentBlue)
+                    .fillMaxWidth()
+                    .height(56.dp)
             ) {
-                Text("Далее", color = Color.White, fontSize = 15.sp)
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Default.ArrowForward, contentDescription = null, tint = Color.White)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(text = "Далее", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null, tint = Color.White)
+                }
             }
         }
     }
